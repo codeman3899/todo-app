@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
+import { useUser, SignInButton, SignOutButton } from "@clerk/clerk-react";
 
 const API = "https://todo-api-c3nt.onrender.com";
 
 function App() {
+  const { isSignedIn, user } = useUser();
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
 
   useEffect(() => {
+    if (!isSignedIn) return;
     async function getTodos() {
       const res = await fetch(`${API}/todos`);
       const data = await res.json();
       setTodos(data);
     }
     getTodos();
-  }, []);
+  }, [isSignedIn]);
 
   async function addTodo() {
     if (!title) return;
@@ -42,10 +45,38 @@ function App() {
     setTodos(todos.map(t => t.id === todo.id ? updated : t));
   }
 
+  if (!isSignedIn) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "100px" }}>
+        <h1>Todo App</h1>
+        <p>Please sign in to continue</p>
+        <SignInButton mode="modal">
+          <button style={{
+            padding: "10px 30px", background: "blue",
+            color: "white", border: "none", borderRadius: "6px",
+            cursor: "pointer", fontSize: "16px", marginTop: "20px"
+          }}>Sign In</button>
+        </SignInButton>
+      </div>
+    );
+  }
+
   return (
     <div style={{ maxWidth: "500px", margin: "40px auto", fontFamily: "Arial" }}>
-      <h1>Todo App</h1>
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1>Todo App</h1>
+        <div>
+          <span style={{ marginRight: "10px" }}>Hi, {user.firstName}</span>
+          <SignOutButton>
+            <button style={{
+              padding: "8px 16px", background: "gray",
+              color: "white", border: "none", borderRadius: "6px", cursor: "pointer"
+            }}>Sign Out</button>
+          </SignOutButton>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px", marginTop: "20px" }}>
         <input
           placeholder="Add a todo..."
           value={title}
@@ -57,6 +88,7 @@ function App() {
           color: "white", border: "none", borderRadius: "6px", cursor: "pointer"
         }}>Add</button>
       </div>
+
       {todos.map(todo => (
         <div key={todo.id} style={{
           display: "flex", alignItems: "center", gap: "10px",
