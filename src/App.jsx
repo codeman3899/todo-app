@@ -47,70 +47,72 @@ function App() {
 
   if (!isSignedIn) {
     return (
-      <div style={{ textAlign: "center", marginTop: "100px" }}>
-        <h1>Todo App</h1>
-        <p>Please sign in to continue</p>
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+        <h1 className="text-4xl font-bold text-blue-600 mb-4">Todo App</h1>
+        <p className="text-gray-500 mb-8">Please sign in to continue</p>
         <SignInButton mode="modal">
-          <button style={{
-            padding: "10px 30px", background: "blue",
-            color: "white", border: "none", borderRadius: "6px",
-            cursor: "pointer", fontSize: "16px", marginTop: "20px"
-          }}>Sign In</button>
+          <button className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-700 cursor-pointer">
+            Sign In
+          </button>
         </SignInButton>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: "500px", margin: "40px auto", fontFamily: "Arial" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>Todo App</h1>
-        <div>
-          <span style={{ marginRight: "10px" }}>Hi, {user.firstName}</span>
-          <SignOutButton>
-            <button style={{
-              padding: "8px 16px", background: "gray",
-              color: "white", border: "none", borderRadius: "6px", cursor: "pointer"
-            }}>Sign Out</button>
-          </SignOutButton>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-lg mx-auto pt-10 px-4">
+
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-blue-600">Todo App</h1>
+          <div className="flex items-center gap-3">
+            <span className="text-gray-600 font-medium">Hi, {user.firstName}</span>
+            <SignOutButton>
+              <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 cursor-pointer">
+                Sign Out
+              </button>
+            </SignOutButton>
+          </div>
         </div>
-      </div>
 
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px", marginTop: "20px" }}>
-        <input
-          placeholder="Add a todo..."
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          style={{ flex: 1, padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
-        />
-        <button onClick={addTodo} style={{
-          padding: "10px 20px", background: "blue",
-          color: "white", border: "none", borderRadius: "6px", cursor: "pointer"
-        }}>Add</button>
-      </div>
-
-      {todos.map(todo => (
-        <div key={todo.id} style={{
-          display: "flex", alignItems: "center", gap: "10px",
-          padding: "10px", background: "white", borderRadius: "8px",
-          marginBottom: "10px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
-        }}>
+        <div className="flex gap-3 mb-6">
           <input
-            type="checkbox"
-            checked={todo.completed}
-            onChange={() => toggleTodo(todo)}
+            placeholder="Add a todo..."
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
           />
-          <span style={{
-            flex: 1,
-            textDecoration: todo.completed ? "line-through" : "none",
-            color: todo.completed ? "#999" : "#333"
-          }}>{todo.title}</span>
-          <button onClick={() => deleteTodo(todo.id)} style={{
-            background: "red", color: "white", border: "none",
-            padding: "5px 10px", borderRadius: "4px", cursor: "pointer"
-          }}>Delete</button>
+          <button
+            onClick={addTodo}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 cursor-pointer"
+          >
+            Add
+          </button>
         </div>
-      ))}
+
+        <div className="flex flex-col gap-3">
+          {todos.map(todo => (
+            <div key={todo.id} className="flex items-center gap-3 bg-white px-4 py-3 rounded-lg shadow-sm">
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => toggleTodo(todo)}
+                className="w-5 h-5 cursor-pointer"
+              />
+              <span className={`flex-1 text-gray-800 ${todo.completed ? "line-through text-gray-400" : ""}`}>
+                {todo.title}
+              </span>
+              <button
+                onClick={() => deleteTodo(todo.id)}
+                className="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+
+      </div>
     </div>
   );
 }
