@@ -27,6 +27,11 @@ function App() {
     });
     const newTodo = await res.json();
     setTodos([...todos, newTodo]);
+    fetch("https://hazemx.app.n8n.cloud/webhook/0a4dd8e9-46c6-44fa-8c12-a0cbf9cc81fc", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(newTodo),
+});
     setTitle("");
   }
 
